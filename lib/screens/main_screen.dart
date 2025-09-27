@@ -3,6 +3,7 @@ import '../main.dart';
 import 'home_screen.dart';
 import 'scanner_screen.dart';
 import 'quiz_screen.dart';
+import 'ai_assistant_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,6 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const ScannerScreen(),
     const QuizScreen(),
+    const AIAssistantScreen(),
   ];
 
   @override
@@ -106,6 +108,22 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ),
                   label: 'Quiz',
+                ),
+                BottomNavigationBarItem(
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: _currentIndex == 3 
+                        ? AppColors.primaryGreen.withValues(alpha: 0.1)
+                        : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      _currentIndex == 3 ? Icons.smart_toy : Icons.smart_toy_outlined,
+                      size: 24,
+                    ),
+                  ),
+                  label: 'AI Assistant',
                 ),
               ],
             ),

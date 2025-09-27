@@ -312,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         : AppColors.textSecondary,
                       size: 20,
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     Text(
                       'Cattle',
                       style: TextStyle(
