@@ -40,7 +40,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen> {
   void _addWelcomeMessage() {
     _messages.add(
       ChatMessage(
-        text: '''🐄 **Welcome to BPA AI Assistant!** 🐃
+        text: '''🐄 **Welcome to CattleX AI Assistant!** 🐃
 
 I'm here to help you with questions about Indian cattle and buffalo breeds. You can ask me about:
 

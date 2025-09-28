@@ -8,15 +8,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:bharat_pashudhan_app/main.dart';
+import 'package:cattlex_app/main.dart';
 
 void main() {
-  testWidgets('BPA app smoke test', (WidgetTester tester) async {
+  testWidgets('CattleX app smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const BharatPashudhanApp());
+    await tester.pumpWidget(const CattleXApp());
 
     // Verify that the app loads with the main screen
-    expect(find.text('Bharat Pashudhan'), findsOneWidget);
+    expect(find.text('CattleX'), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
     expect(find.text('Scanner'), findsOneWidget);
     expect(find.text('Quiz'), findsOneWidget);

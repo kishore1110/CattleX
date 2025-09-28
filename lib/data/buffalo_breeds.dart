@@ -1,57 +1,33 @@
 class BuffaloBreeds {
   static String getDetailedDescription(String breedName) {
     switch (breedName) {
-      case 'Murrah Buffalo':
-        return '''Colour: Jet black with white markings on face, tail, and legs. Skin is black with sparse hair.
+      case 'Banni':
+        return '''	
+Colour: Mainly Black, some times Copper colour.
 
-Horn Shape & Size: Tightly curled, forming complete rings. Strong and well-developed horns.
+Horn Shape & Size : Curved. Medium to large, heavy with 24 to 30cm diameter in adult animals.
 
-Characteristics: World's best dairy buffalo breed. Excellent milk production with high fat content.
+Visible Characteristic :Horns are vertical and upward in direction with inverted double/single coiling.''';
 
-Origin: Haryana, India. Considered the best buffalo breed for milk production globally.
+      case 'Bargur':
+        return '''	
+Coat colors vary from black to light brown or brownish black. Greyish white stockings from carpal/tarsal joint to fetlock are present predominantly in females. These buffaloes are maintained under extensive system and are reared for manure, milk and meat (male calves are sold for cara-beef). The animals are adapted to graze in the hilly terrain due its small size (about 102cm in height). The milk yield of the animals ranges from 1.5 to 2.0 liters per day and mainly used for house hold consumption.''';
 
-Physical Features: Bulls weigh 550-650 kg, females weigh 450-550 kg. Well-developed udder with prominent milk veins.
 
-Special Qualities: Highest milk yield among buffalo breeds, excellent feed conversion, good fertility and longevity.''';
+      case 'Bhadawari':
+        return '''They are blackish copper to light copper coloured with wheat straw-like colour over the legs.Two white lines, “Chevron”, called as “Kanthy” in local language, are present on lower side of the neck.Horns are black curling slightly outward and downward before running parallel backward near neck and finally turning upward.''';
 
-      case 'Nili-Ravi Buffalo':
-        return '''Colour: Black with white markings on face, legs, and tail tip. Distinctive white collar around neck.
+      case 'Chhattisgarhi':
+        return '''	
+Coat colour is black. Animals are medium built with proportionate body. Horns are medium to large in size and directed laterally backwards and then upwards with pointing tips. These buffaloes are reared under extensive system for providing draught power, milk and meat. Males have excellent ploughing ability, and preferred over cow bullocksspecifically in rice fields. Milk yield ranges from 3 to 6 kg/day.''';
 
-Horn Shape & Size: Tightly curled, similar to Murrah but slightly larger.
+      case 'Chilika':
+        return '''	
+Colour : Brown is hblack or Black Horn.
 
-Characteristics: High milk producing breed with excellent quality. Good heat tolerance and disease resistance.
+Shape & Size :Curved Upward, inward. 
 
-Origin: Punjab region of India and Pakistan. Developed along Ravi river belt.
-
-Physical Features: Larger than Murrah. Bulls weigh 600-700 kg, females weigh 500-600 kg.
-
-Special Qualities: High milk yield with good fat percentage, excellent mothering ability, and good longevity.''';
-
-      case 'Surti Buffalo':
-        return '''Colour: Black to dark brown. Some animals may have grey or silver markings.
-
-Horn Shape & Size: Sickle-shaped, curved backward and upward. Medium sized horns.
-
-Characteristics: Compact breed with rich milk quality. High fat content in milk makes it ideal for dairy products.
-
-Origin: Kaira and Baroda districts of Gujarat. Well adapted to coastal regions.
-
-Physical Features: Smaller than Murrah. Bulls weigh 400-500 kg, females weigh 350-450 kg.
-
-Special Qualities: Rich milk with high fat content (7-8%), excellent for ghee and butter production.''';
-
-      case 'Jaffarabadi Buffalo':
-        return '''Colour: Black with white markings on face and legs. Large and massive build.
-
-Horn Shape & Size: Large, thick, and curved. Well-developed horn structure.
-
-Characteristics: Largest buffalo breed in India. Excellent draught capacity and good milk production.
-
-Origin: Jaffarabad district of Gujarat. Primarily used for draught purposes.
-
-Physical Features: Very large size. Bulls weigh 700-800 kg, females weigh 600-700 kg.
-
-Special Qualities: Excellent draught power, good milk production, hardy and disease resistant.''';
+Visible Characteristic: Medium sized with compact body, strong legs and small udder. Habitatis chilka lake.''';
 
       default:
         return 'Detailed information about this buffalo breed will be available soon. Please visit the official Pashupedia website for more comprehensive breed information.';
@@ -61,28 +37,34 @@ Special Qualities: Excellent draught power, good milk production, hardy and dise
   static List<Map<String, String>> getBuffaloBreeds() {
     return [
       {
-        'title': 'Murrah Buffalo',
-        'description': 'Famous buffalo breed with excellent milk production and fat content.',
-        'image': 'assets/images/murrah_buffalo.jpg',
-        'yield': '18-25L/day',
-      },
-      {
-        'title': 'Nili-Ravi Buffalo',
-        'description': 'High-yielding buffalo breed from Punjab with superior milk quality.',
-        'image': 'assets/images/murrah_buffalo.jpg',
-        'yield': '20-28L/day',
-      },
-      {
-        'title': 'Surti Buffalo',
-        'description': 'Compact buffalo breed from Gujarat known for rich milk with high fat content.',
-        'image': 'assets/images/murrah_buffalo.jpg',
-        'yield': '8-12L/day',
-      },
-      {
-        'title': 'Jaffarabadi Buffalo',
-        'description': 'Large buffalo breed from Gujarat with excellent draught capacity.',
-        'image': 'assets/images/murrah_buffalo.jpg',
+        'title': 'Banni',
+        'description': 'Resilient breed from Kutch, Gujarat; night grazer, disease-resistant, high milk.',
+        'image': 'assets/images/Banni.jpg',
         'yield': '12-18L/day',
+      },
+      {
+        'title': 'Bargur',
+        'description': 'Indigenous breed from Tamil Nadu, sturdy, adapted to hilly terrain.',
+        'image': 'assets/images/Bargur_buffalo.jpg',
+        'yield': '3-5L/day',
+      },
+      {
+        'title': 'Bhadawari',
+        'description': 'Breed from Uttar Pradesh–Madhya Pradesh border, copper-colored, high-fat milk.',
+        'image': 'assets/images/Bhadawari.jpg',
+        'yield': '4-7L/day',
+      },
+      {
+        'title': 'Chhattisgarhi',
+        'description': 'Indigenous buffalo breed from Chhattisgarh, hardy, well-suited for local farming.',
+        'image': 'assets/images/Chhattisgarhi.jpg',
+        'yield': '4-6L/day',
+      },
+      {
+        'title': 'Chilika',
+        'description': 'Indigenous buffalo breed from Odisha, thrives in marshy wetland areas.',
+        'image': 'assets/images/Chilika.jpg',
+        'yield': '2-4L/day',
       },
     ];
   }

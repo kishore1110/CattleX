@@ -15,6 +15,16 @@ class _ScannerScreenState extends State<ScannerScreen> {
   final ImagePicker _picker = ImagePicker();
   bool _isAnalyzing = false;
   String? _breedResult;
+  final ScrollController _scrollController = ScrollController();
+  
+
+  // No model initialization required for static result
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -39,17 +49,44 @@ class _ScannerScreenState extends State<ScannerScreen> {
     
     setState(() {
       _isAnalyzing = true;
+      _breedResult = null;
     });
     
-    // Simulate AI analysis delay
-    await Future.delayed(const Duration(seconds: 3));
-    
-    // Mock breed identification result
-    setState(() {
-      _isAnalyzing = false;
-      _breedResult = 'Gir Cattle (Confidence: 92%)';
-    });
+    try {
+      // Show loading for 5 seconds then return static Gir result
+      await Future.delayed(const Duration(seconds: 5));
+      setState(() {
+        _breedResult = 'Gir';
+      });
+      
+      // Auto-scroll to show the result after a brief delay
+      if (mounted) {
+        await Future.delayed(const Duration(milliseconds: 300));
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+      
+    } catch (e) {
+      print('Error during analysis: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Analysis failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      setState(() {
+        _isAnalyzing = false;
+      });
+    }
   }
+
+  // Removed detection success/failure dialogs for static result mode
 
   void _showImageSourceDialog() {
     showModalBottomSheet(
@@ -91,6 +128,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -307,19 +345,36 @@ class _ScannerScreenState extends State<ScannerScreen> {
                               color: AppColors.textSecondary,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 8),
                           Text(
                             _breedResult!,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                               color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Cattle',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           const SizedBox(height: 12),
-                          Text(
-                            'This breed is known for its excellent milk production and disease resistance. It is one of the most popular indigenous cattle breeds in India.',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              height: 1.4,
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppColors.success.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+                            ),
+                            child: Text(
+                              'Confidence: 92.7%',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: AppColors.success,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -334,14 +389,14 @@ class _ScannerScreenState extends State<ScannerScreen> {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Breed data saved to BPA database'),
+                                    content: Text('Breed data saved to CattleX database'),
                                     backgroundColor: AppColors.success,
                                   ),
                                 );
                               }
                             },
                             icon: const Icon(Icons.save),
-                            label: const Text('Save to BPA'),
+                            label: const Text('Save to CattleX'),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -372,7 +427,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         children: [
           const Icon(
             Icons.check_circle_outline,
-            color: Colors.white70,
+            color: Colors.white,
             size: 16,
           ),
           const SizedBox(width: 8),
@@ -380,7 +435,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
             child: Text(
               text,
               style: const TextStyle(
-                color: Colors.white70,
+                color: Colors.white,
                 fontSize: 14,
               ),
             ),

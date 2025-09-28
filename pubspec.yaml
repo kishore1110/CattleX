@@ -1,5 +1,5 @@
-name: bharat_pashudhan_app
-description: "Bharat Pashudhan App (BPA) - AI-powered cattle and buffalo breed identification app for Field Level Workers."
+name: cattlex_app
+description: "CattleX - AI-powered cattle and buffalo breed identification app for Field Level Workers."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   
-  # Additional dependencies for BPA
+  # Additional dependencies for CattleX
   camera: ^0.10.5+5
   image_picker: ^1.0.4
   permission_handler: ^11.0.1
@@ -45,6 +45,8 @@ dependencies:
   google_generative_ai: ^0.4.7
   flutter_markdown: ^0.6.18
   connectivity_plus: ^5.0.2
+  
+  # Placeholder for future YOLOv8 model integration
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +74,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/models/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

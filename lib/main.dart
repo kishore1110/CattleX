@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/main_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
-  runApp(const BharatPashudhanApp());
+  runApp(const CattleXApp());
 }
 
 // Professional Color Palette for Government App
@@ -40,13 +40,13 @@ class AppColors {
   static const Color divider = Color(0xFFEEEEEE);
 }
 
-class BharatPashudhanApp extends StatelessWidget {
-  const BharatPashudhanApp({super.key});
+class CattleXApp extends StatelessWidget {
+  const CattleXApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bharat Pashudhan App',
+      title: 'CattleX',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -198,7 +198,7 @@ class BharatPashudhanApp extends StatelessWidget {
         // Scaffold Background
         scaffoldBackgroundColor: AppColors.backgroundLight,
       ),
-      home: const MainScreen(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -248,7 +248,7 @@ Keep your response helpful and informative.''';
       statusMessage = 'encountered an error';
     }
     
-    return '''**BPA AI Assistant** 🤖
+    return '''**CattleX AI Assistant** 🤖
 
 I'm ${statusMessage}. Here's what you can do:
 

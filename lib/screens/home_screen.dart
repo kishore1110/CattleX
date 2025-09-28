@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   bool _isSearching = false;
+  bool _showAllBreeds = false; // Track if all breeds should be shown
 
   @override
   void dispose() {
@@ -32,18 +33,43 @@ class _HomeScreenState extends State<HomeScreen> {
         slivers: [
           // Enhanced Professional App Bar with Government Branding
           SliverAppBar(
-            expandedHeight: 350,
+            expandedHeight: 330,
             floating: false,
             pinned: true,
             backgroundColor: AppColors.primaryGreen,
+            leadingWidth: 80, // Give more space for the logo
             flexibleSpace: FlexibleSpaceBar(
               background: Opacity(
                 opacity: 0.9,
                 child: _buildHeaderSection(context),
               ),
             ),
+            leading: Container(
+              margin: const EdgeInsets.only(left: 24.0),
+              child: AspectRatio(
+                aspectRatio: 1.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/icons/innerLogo.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             title: const Text(
-              'Bharat Pashudhan',
+              'CattleX',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -52,11 +78,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+                icon: const Icon(
+                  Icons.notifications_outlined,
+                  color: Colors.white,
+                ),
                 onPressed: () {},
               ),
               IconButton(
-                icon: const Icon(Icons.account_circle_outlined, color: Colors.white),
+                icon: const Icon(
+                  Icons.account_circle_outlined,
+                  color: Colors.white,
+                ),
                 onPressed: () {},
               ),
             ],
@@ -69,10 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    AppColors.backgroundLight,
-                    Colors.white,
-                  ],
+                  colors: [AppColors.backgroundLight, Colors.white],
                   stops: const [0.0, 0.1],
                 ),
               ),
@@ -82,9 +111,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Enhanced Breed Database Section
-                    _buildSectionHeader(context, 'Breed Information', 'View All'),
+                    _buildSectionHeader(
+                      context,
+                      'Breed Information',
+                      'View All',
+                    ),
                     const SizedBox(height: 16),
-                    
+
                     // Category Selector - only show when not searching
                     if (!_isSearching) ...[
                       _buildCategorySelector(),
@@ -92,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ] else ...[
                       const SizedBox(height: 8),
                     ],
-                    
+
                     _buildBreedCardsSection(context),
                   ],
                 ),
@@ -132,14 +165,13 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              
               // Welcome Message Section
               Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
@@ -154,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Welcome to BPA',
+                          'Welcome to CattleX',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -219,10 +251,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
-                    prefixIcon: const Icon(Icons.search, color: AppColors.primaryGreen, size: 24),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: AppColors.primaryGreen,
+                      size: 24,
+                    ),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear, color: AppColors.textLight),
+                            icon: const Icon(
+                              Icons.clear,
+                              color: AppColors.textLight,
+                            ),
                             onPressed: () {
                               _searchController.clear();
                               setState(() {
@@ -251,8 +290,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-  Widget _buildSectionHeader(BuildContext context, String title, String actionText) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    String actionText,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -292,14 +334,19 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 setState(() {
                   _selectedCategory = 'Cattle';
+                  _showAllBreeds =
+                      false; // Reset load more state when switching categories
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
                 decoration: BoxDecoration(
-                  color: _selectedCategory == 'Cattle' 
-                    ? AppColors.primaryGreen 
-                    : Colors.transparent,
+                  color: _selectedCategory == 'Cattle'
+                      ? AppColors.primaryGreen
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -307,21 +354,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Icon(
                       FontAwesomeIcons.cow,
-                      color: _selectedCategory == 'Cattle' 
-                        ? Colors.white 
-                        : AppColors.textSecondary,
+                      color: _selectedCategory == 'Cattle'
+                          ? Colors.white
+                          : AppColors.textSecondary,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
                     Text(
                       'Cattle',
                       style: TextStyle(
-                        color: _selectedCategory == 'Cattle' 
-                          ? Colors.white 
-                          : AppColors.textSecondary,
-                        fontWeight: _selectedCategory == 'Cattle' 
-                          ? FontWeight.w600 
-                          : FontWeight.normal,
+                        color: _selectedCategory == 'Cattle'
+                            ? Colors.white
+                            : AppColors.textSecondary,
+                        fontWeight: _selectedCategory == 'Cattle'
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                         fontSize: 16,
                       ),
                     ),
@@ -335,14 +382,19 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 setState(() {
                   _selectedCategory = 'Buffalo';
+                  _showAllBreeds =
+                      false; // Reset load more state when switching categories
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
                 decoration: BoxDecoration(
-                  color: _selectedCategory == 'Buffalo' 
-                    ? AppColors.primaryGreen 
-                    : Colors.transparent,
+                  color: _selectedCategory == 'Buffalo'
+                      ? AppColors.primaryGreen
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -363,12 +415,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       'Buffalo',
                       style: TextStyle(
-                        color: _selectedCategory == 'Buffalo' 
-                          ? Colors.white 
-                          : AppColors.textSecondary,
-                        fontWeight: _selectedCategory == 'Buffalo' 
-                          ? FontWeight.w600 
-                          : FontWeight.normal,
+                        color: _selectedCategory == 'Buffalo'
+                            ? Colors.white
+                            : AppColors.textSecondary,
+                        fontWeight: _selectedCategory == 'Buffalo'
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                         fontSize: 16,
                       ),
                     ),
@@ -388,17 +440,27 @@ class _HomeScreenState extends State<HomeScreen> {
     final buffaloBreeds = BuffaloBreeds.getBuffaloBreeds();
 
     // Get breeds based on category
-    List<Map<String, String>> allBreeds = _selectedCategory == 'Cattle' ? cattleBreeds : buffaloBreeds;
-    
+    List<Map<String, String>> allBreeds = _selectedCategory == 'Cattle'
+        ? cattleBreeds
+        : buffaloBreeds;
+
     // Filter breeds based on search query
     List<Map<String, String>> filteredBreeds = allBreeds;
     if (_searchQuery.isNotEmpty) {
-      // Search across both categories when searching
-      List<Map<String, String>> allBreedsForSearch = [...cattleBreeds, ...buffaloBreeds];
+      // Search across both categories when searching (search all breeds)
+      List<Map<String, String>> allBreedsForSearch = [
+        ...cattleBreeds,
+        ...buffaloBreeds,
+      ];
       filteredBreeds = allBreedsForSearch.where((breed) {
         return breed['title']!.toLowerCase().contains(_searchQuery) ||
-               breed['description']!.toLowerCase().contains(_searchQuery);
+            breed['description']!.toLowerCase().contains(_searchQuery);
       }).toList();
+    } else {
+      // When not searching, limit to first 4 breeds unless 'Load more' is clicked
+      if (!_showAllBreeds) {
+        filteredBreeds = allBreeds.take(4).toList();
+      }
     }
 
     // Show search results or no results message
@@ -407,11 +469,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(40),
         child: Column(
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: AppColors.textLight,
-            ),
+            Icon(Icons.search_off, size: 64, color: AppColors.textLight),
             const SizedBox(height: 16),
             Text(
               'No breeds found',
@@ -423,9 +481,9 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 8),
             Text(
               'Try searching with different keywords or check the other category.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.textLight,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.textLight),
               textAlign: TextAlign.center,
             ),
           ],
@@ -441,11 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(bottom: 16),
             child: Row(
               children: [
-                Icon(
-                  Icons.search,
-                  size: 16,
-                  color: AppColors.textSecondary,
-                ),
+                Icon(Icons.search, size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 8),
                 Text(
                   '${filteredBreeds.length} result${filteredBreeds.length != 1 ? 's' : ''} found for "$_searchQuery"',
@@ -457,7 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-        
+
         // Display filtered breeds
         for (int i = 0; i < filteredBreeds.length; i += 2)
           Padding(
@@ -489,7 +543,39 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-        
+
+        // Load More Button (only show when not searching and there are more breeds to show)
+        if (!_isSearching && !_showAllBreeds && allBreeds.length > 4)
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _showAllBreeds = true;
+                  });
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primaryGreen,
+                  side: const BorderSide(color: AppColors.primaryGreen),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.expand_more, size: 20),
+                label: Text(
+                  'Load More ${_selectedCategory} Breeds (${allBreeds.length - 4} more)',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
         // Common Learn More Button for Cattle and Buffalo
         if (!_isSearching)
           Padding(
@@ -498,9 +584,9 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  final url = _selectedCategory == 'Cattle' 
-                    ? 'https://dahd.gov.in/pashupedia-cattle-breed'
-                    : 'https://dahd.gov.in/pashupedia-buffalo-breed';
+                  final url = _selectedCategory == 'Cattle'
+                      ? 'https://dahd.gov.in/pashupedia-cattle-breed'
+                      : 'https://dahd.gov.in/pashupedia-buffalo-breed';
                   await _launchURL(context, url);
                 },
                 style: ElevatedButton.styleFrom(
@@ -527,7 +613,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBreedCard(String title, String description, String imagePath, String yield, VoidCallback onTap) {
+  Widget _buildBreedCard(
+    String title,
+    String description,
+    String imagePath,
+    String yield,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -547,55 +639,55 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 140,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-              image: DecorationImage(
-                image: AssetImage(imagePath),
-                fit: BoxFit.contain,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 140,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                    letterSpacing: 0.3,
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                      letterSpacing: 0.3,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  description,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.textSecondary,
-                    height: 1.4,
-                    letterSpacing: 0.2,
+                  const SizedBox(height: 12),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textSecondary,
+                      height: 1.4,
+                      letterSpacing: 0.2,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -682,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  
+
                   // Content
                   Padding(
                     padding: const EdgeInsets.all(20),
@@ -699,13 +791,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Yield Badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [AppColors.success, AppColors.secondaryGreen],
+                              colors: [
+                                AppColors.success,
+                                AppColors.secondaryGreen,
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -718,9 +816,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Description
                         Text(
                           'About this Breed',
@@ -731,7 +829,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Detailed Description with Fixed Height and Scroll
                         Container(
                           height: 200,
@@ -743,13 +841,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: SingleChildScrollView(
                             child: RichText(
-                              text: _getDetailedDescriptionRich(breed['title']!),
+                              text: _getDetailedDescriptionRich(
+                                breed['title']!,
+                              ),
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Close Button Only
                         SizedBox(
                           width: double.infinity,
@@ -757,7 +857,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () => Navigator.of(context).pop(),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.primaryGreen,
-                              side: const BorderSide(color: AppColors.primaryGreen),
+                              side: const BorderSide(
+                                color: AppColors.primaryGreen,
+                              ),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
                             child: const Text('Close'),
@@ -778,61 +880,67 @@ class _HomeScreenState extends State<HomeScreen> {
   TextSpan _getDetailedDescriptionRich(String breedName) {
     String description = _getDetailedDescription(breedName);
     List<TextSpan> spans = [];
-    
+
     // Split by lines and format headings
     List<String> lines = description.split('\n');
-    
+
     for (String line in lines) {
-      if (line.contains(':') && (line.startsWith('Colour:') || 
-          line.startsWith('Horn Shape & Size:') || 
-          line.startsWith('Characteristics:') || 
-          line.startsWith('Visible Characteristic:') ||
-          line.startsWith('Origin:') || 
-          line.startsWith('Physical Features:') || 
-          line.startsWith('Special Qualities:'))) {
-        
+      if (line.contains(':') &&
+          (line.startsWith('Colour:') ||
+              line.startsWith('Horn Shape & Size:') ||
+              line.startsWith('Characteristics:') ||
+              line.startsWith('Visible Characteristic:') ||
+              line.startsWith('Origin:') ||
+              line.startsWith('Physical Features:') ||
+              line.startsWith('Special Qualities:'))) {
         // Split heading and content
         List<String> parts = line.split(':');
         if (parts.length >= 2) {
           // Add heading in black
-          spans.add(TextSpan(
-            text: '${parts[0]}:',
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              height: 1.6,
+          spans.add(
+            TextSpan(
+              text: '${parts[0]}:',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                height: 1.6,
+              ),
             ),
-          ));
-          
+          );
+
           // Add content in gray
-          spans.add(TextSpan(
-            text: ' ${parts.sublist(1).join(':')}',
+          spans.add(
+            TextSpan(
+              text: ' ${parts.sublist(1).join(':')}',
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                height: 1.6,
+              ),
+            ),
+          );
+        }
+      } else {
+        // Regular text
+        spans.add(
+          TextSpan(
+            text: line,
             style: const TextStyle(
               fontSize: 14,
               color: AppColors.textSecondary,
               height: 1.6,
             ),
-          ));
-        }
-      } else {
-        // Regular text
-        spans.add(TextSpan(
-          text: line,
-          style: const TextStyle(
-            fontSize: 14,
-            color: AppColors.textSecondary,
-            height: 1.6,
           ),
-        ));
+        );
       }
-      
+
       // Add line break except for last line
       if (line != lines.last) {
         spans.add(const TextSpan(text: '\n'));
       }
     }
-    
+
     return TextSpan(children: spans);
   }
 
@@ -842,13 +950,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (cattleDescription != CattleBreeds.getDetailedDescription('Unknown')) {
       return cattleDescription;
     }
-    
+
     // Check if it's a buffalo breed
     final buffaloDescription = BuffaloBreeds.getDetailedDescription(breedName);
     if (buffaloDescription != BuffaloBreeds.getDetailedDescription('Unknown')) {
       return buffaloDescription;
     }
-    
+
     // Default fallback
     return 'Detailed information about this breed will be available soon. Please visit the official Pashupedia website for more comprehensive breed information.';
   }
@@ -856,19 +964,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _launchURL(BuildContext context, String url) async {
     try {
       final Uri uri = Uri.parse(url);
-      
+
       // Try to launch the URL directly
       if (await canLaunchUrl(uri)) {
-        await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication,
-        );
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         // If direct launch fails, try with different mode
-        await launchUrl(
-          uri,
-          mode: LaunchMode.platformDefault,
-        );
+        await launchUrl(uri, mode: LaunchMode.platformDefault);
       }
     } catch (e) {
       // If URL launching fails, show error message
@@ -883,6 +985,4 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
   }
-
-
 }
