@@ -44,11 +44,10 @@ class _AIAssistantScreenState extends State<AIAssistantScreen> {
 
 I'm here to help you with questions about Indian cattle and buffalo breeds. You can ask me about:
 
-• **Breed Information** - Characteristics, colors, horn shapes
-• **Milk Production** - Yields, quality, best practices  
-• **Care & Feeding** - Nutrition, health, disease prevention
-• **Climate Advice** - Best breeds for your region
-• **Breeding Tips** - Selection, management, productivity
+• **Breed Information** - Characteristics, colors, horn shapes\n
+• **Milk Production** - Yields, quality, best practices\n 
+• **Care & Feeding** - Nutrition, health, disease prevention\n
+• **Breeding Tips** - Selection, management, productivity\n
 
 What would you like to know about cattle or buffalo breeds?''',
         isBot: true,
@@ -244,40 +243,49 @@ What would you like to know about cattle or buffalo breeds?''',
             const SizedBox(width: 8),
           ],
           Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: message.isBot
-                    ? AppColors.backgroundLight
-                    : AppColors.primaryGreen,
-                borderRadius: BorderRadius.circular(16),
-                border: message.isBot
-                    ? Border.all(color: AppColors.border)
-                    : null,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.8,
               ),
-              child: message.isBot
-                  ? MarkdownBody(
-                      data: message.text,
-                      styleSheet: MarkdownStyleSheet(
-                        p: TextStyle(
-                          color: AppColors.textSecondary,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: message.isBot
+                      ? AppColors.backgroundLight
+                      : AppColors.primaryGreen,
+                  borderRadius: BorderRadius.circular(16),
+                  border: message.isBot
+                      ? Border.all(color: AppColors.border)
+                      : null,
+                ),
+                child: message.isBot
+                    ? MarkdownBody(
+                        data: message.text,
+                        styleSheet: MarkdownStyleSheet(
+                          p: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                            height: 1.5,
+                          ),
+                          strong: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          listBullet: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : Text(
+                        message.text,
+                        style: const TextStyle(
+                          color: Colors.white,
                           fontSize: 14,
                           height: 1.4,
                         ),
-                        strong: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
                       ),
-                    )
-                  : Text(
-                      message.text,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        height: 1.4,
-                      ),
-                    ),
+              ),
             ),
           ),
           if (!message.isBot) ...[
