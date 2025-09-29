@@ -31,7 +31,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int _score = 0;
   bool _quizCompleted = false;
   List<int?> _selectedAnswers = [];
-  List<Map<String, dynamic>> _questions = [];
+  final List<Map<String, dynamic>> _questions = [];
 
   // Combined breed data
   List<Map<String, String>> get _allBreeds {
@@ -246,7 +246,7 @@ class _QuizScreenState extends State<QuizScreen> {
           (line.contains('Colour:') ||
               line.contains('Horn Shape') ||
               line.contains('Characteristics:'))) {
-        characteristics += line.trim() + ' ';
+        characteristics += '${line.trim()} ';
         if (characteristics.length > 150) break;
       }
     }

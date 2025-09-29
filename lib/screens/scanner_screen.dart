@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../main.dart';
+import 'registration_form_screen.dart';
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
@@ -15,6 +16,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
   final ImagePicker _picker = ImagePicker();
   bool _isAnalyzing = false;
   String? _breedResult;
+  bool _isRegistered = false; // Track if current image has been registered
   final ScrollController _scrollController = ScrollController();
   
 
@@ -33,6 +35,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         setState(() {
           _selectedImage = File(image.path);
           _breedResult = null;
+          _isRegistered = false; // Reset registration status for new image
         });
       }
     } catch (e) {
@@ -70,7 +73,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
       }
       
     } catch (e) {
-      print('Error during analysis: $e');
+      // Error during analysis: $e
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -330,10 +333,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
                     ),
                     const SizedBox(height: 16),
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: AppColors.border),
                       ),
                       child: Column(
@@ -381,35 +385,45 @@ class _ScannerScreenState extends State<ScannerScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Breed data saved to CattleX database'),
-                                    backgroundColor: AppColors.success,
-                                  ),
-                                );
-                              }
-                            },
-                            icon: const Icon(Icons.save),
-                            label: const Text('Save to CattleX'),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton.icon(
+                        onPressed: _isRegistered ? null : () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegistrationFormScreen(
+                                breedName: _breedResult ?? 'Unknown',
+                                confidence: 0.85, // Static confidence for now
+                              ),
+                            ),
+                          );
+                          
+                          // If registration was successful, update the status
+                          if (result == true) {
+                            setState(() {
+                              _isRegistered = true;
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _isRegistered ? Colors.grey : AppColors.primaryGreen,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                        ),
+                        icon: Icon(_isRegistered ? Icons.check_circle : Icons.app_registration),
+                        label: Text(
+                          _isRegistered ? 'Registered' : 'Register Animal',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // View detailed breed info
-                            },
-                            icon: const Icon(Icons.info),
-                            label: const Text('View Details'),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

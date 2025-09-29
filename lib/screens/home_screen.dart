@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -566,7 +566,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 icon: const Icon(Icons.expand_more, size: 20),
                 label: Text(
-                  'Load More ${_selectedCategory} Breeds (${allBreeds.length - 4} more)',
+                  'Load More $_selectedCategory Breeds (${allBreeds.length - 4} more)',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -600,7 +600,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 icon: const Icon(Icons.open_in_new, size: 20),
                 label: Text(
-                  'Learn More About ${_selectedCategory} Breeds',
+                  'Learn More About $_selectedCategory Breeds',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

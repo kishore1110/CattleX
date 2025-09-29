@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class GeminiService {
-  static const String _apiKey = 'AIzaSyAalYuv9zIi8itAc_bKJP2zgzbxUTGdu5M';
+  static const String _apiKey = 'AIzaSyBxRvHEC92dv7GtRWEFBb1UXa1-JUCYWjE';
   late final GenerativeModel _model;
   bool _isOnline = true;
   

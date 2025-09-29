@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1031719165639",
+    "project_id": "cattlex-app",
+    "storage_bucket": "cattlex-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031719165639:android:7d6a32101ce69af41968e2",
+        "android_client_info": {
+          "package_name": "com.example.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIakzuwb5d8Fo6fdq9YCq8jN6coMlqhS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
