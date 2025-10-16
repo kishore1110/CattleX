@@ -62,44 +62,8 @@ class GeminiService {
   }
 
   Future<String> testConnection() async {
-    try {
-      print('DEBUG: Testing API connection with current Gemini model...');
-      await _updateConnectivity();
-
-      if (!_isOnline) {
-        return '🌐 No internet connection detected';
-      }
-
-      if (!_modelAvailable || _model == null) {
-        return 'Model not available - using offline mode instead.';
-      }
-
-      final content = [Content.text('Say "Hello" in one word.')];
-      final response = await _model!
-          .generateContent(content)
-          .timeout(const Duration(seconds: 10));
-
-      final result = response.text ?? 'No response received';
-      print('DEBUG: Test connection result: $result');
-      return 'Connection successful! Model response: $result';
-    } on TimeoutException catch (e) {
-      print('DEBUG: Test timeout: $e');
-      return 'Connection timeout - API is slow to respond';
-    } on SocketException catch (e) {
-      print('DEBUG: Test network error: $e');
-      return 'Network error - Check internet connection';
-    } catch (e) {
-      print('DEBUG: Test API error: $e');
-      final errorString = e.toString().toLowerCase();
-      if (errorString.contains('api key not found') ||
-          errorString.contains('invalid key')) {
-        return 'API Key Error: The Gemini API key is invalid or expired. Please check your API key configuration.';
-      } else if (errorString.contains('not found for api version') ||
-          (errorString.contains('model') && errorString.contains('not found'))) {
-        return 'Model Error: The requested Gemini model is not available. Using offline mode instead.';
-      }
-      return 'API Error: ${e.toString()}';
-    }
+    // Removed as requested – model test path no longer supported.
+    return 'Test connection disabled.';
   }
 
   Future<String> sendMessage(String message) async {

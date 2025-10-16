@@ -40,7 +40,7 @@ class _AIAssistantScreenState extends State<AIAssistantScreen> {
   void _addWelcomeMessage() {
     _messages.add(
       ChatMessage(
-        text: '''🐄 **Welcome to CattleX AI Assistant!** 🐃
+        text: ''' **Welcome to CattleX AI Assistant!** 
 
 I'm here to help you with questions about Indian cattle and buffalo breeds. You can ask me about:
 
@@ -50,8 +50,7 @@ I'm here to help you with questions about Indian cattle and buffalo breeds. You 
 • **Breeding Tips** - Selection, management, productivity\n
 
 What would you like to know about cattle or buffalo breeds?
-
-*Type "test connection" to check AI service status*''',
+''',
         isBot: true,
         timestamp: DateTime.now(),
       ),
@@ -79,15 +78,8 @@ What would you like to know about cattle or buffalo breeds?
     _scrollToBottom();
 
     try {
-      String response;
-      
-      // Check for test connection command
-      if (userMessage.toLowerCase().contains('test connection')) {
-        response = await _geminiService.testConnection();
-      } else {
-        // Get AI response
-        response = await _geminiService.sendMessage(userMessage);
-      }
+      // Get AI response
+      final String response = await _geminiService.sendMessage(userMessage);
       
       setState(() {
         _messages.add(
