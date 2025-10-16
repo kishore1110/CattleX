@@ -1,11 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  // Initialize Firebase. On web, Firebase requires explicit FirebaseOptions.
+  // To avoid crashes in web builds without configured options, we attempt to
+  // read options from --dart-define values. If not provided, we skip web
+  // initialization so the app can boot (Firestore features will be inactive
+  // until proper configuration is added).
+  if (kIsWeb) {
+    final apiKey = const String.fromEnvironment('FIREBASE_API_KEY');
+    final appId = const String.fromEnvironment('FIREBASE_APP_ID');
+    final messagingSenderId = const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID');
+    final projectId = const String.fromEnvironment('FIREBASE_PROJECT_ID');
+    final authDomain = const String.fromEnvironment('FIREBASE_AUTH_DOMAIN');
+    final storageBucket = const String.fromEnvironment('FIREBASE_STORAGE_BUCKET');
+    final measurementId = const String.fromEnvironment('FIREBASE_MEASUREMENT_ID');
+
+    final hasRequiredWebOptions = apiKey.isNotEmpty &&
+        appId.isNotEmpty &&
+        messagingSenderId.isNotEmpty &&
+        projectId.isNotEmpty;
+
+    if (hasRequiredWebOptions) {
+      await Firebase.initializeApp(
+        options: FirebaseOptions(
+          apiKey: apiKey,
+          appId: appId,
+          messagingSenderId: messagingSenderId,
+          projectId: projectId,
+          authDomain: authDomain.isNotEmpty ? authDomain : null,
+          storageBucket: storageBucket.isNotEmpty ? storageBucket : null,
+          measurementId: measurementId.isNotEmpty ? measurementId : null,
+        ),
+      );
+    } else {
+      debugPrint('Firebase web initialization skipped: missing --dart-define options.');
+    }
+  } else {
+    await Firebase.initializeApp();
+  }
+
   runApp(const CattleXApp());
 }
 // Professional Color Palette for Government App
