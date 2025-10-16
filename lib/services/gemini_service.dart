@@ -1,18 +1,127 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class GeminiService {
-  static const String _apiKey = 'AIzaSyBxRvHEC92dv7GtRWEFBb1UXa1-JUCYWjE';
-  late final GenerativeModel _model;
+  // TODO: Move API key to environment variables or secure storage
+  // IMPORTANT: Replace this with your upgraded plan API key
+  static const String _apiKey = 'AIzaSyD4ewmkneZwxNKbbO7Suf7u-bs871tEIUo';
+  late final GenerativeModel _primaryModel;
+  late final GenerativeModel _fallbackModel;
+  late final GenerativeModel _lastResortModel;
   bool _isOnline = true;
+  int _modelIndex = 0; // 0: primary, 1: fallback, 2: last resort
   
   GeminiService() {
-    _model = GenerativeModel(
-      model: 'gemini-2.0-flash-exp',
-      apiKey: _apiKey,
-    );
-    _updateConnectivity();
+    _initializeModels();
+  }
+
+  Future<void> _initializeModels() async {
+    try {
+      print('DEBUG: Checking available models...');
+      final availableModels = await listAvailableModels();
+      
+      String primaryModelName = 'gemini-1.5-flash-latest';
+      String fallbackModelName = 'gemini-1.5-pro-latest';
+      
+      // Use the first available model that supports generateContent
+      if (availableModels.isNotEmpty) {
+        // Prefer newer models if available
+        if (availableModels.contains('gemini-1.5-flash-latest')) {
+          primaryModelName = 'gemini-1.5-flash-latest';
+        } else if (availableModels.contains('gemini-1.5-pro-latest')) {
+          primaryModelName = 'gemini-1.5-pro-latest';
+        } else if (availableModels.contains('gemini-1.5-flash')) {
+          primaryModelName = 'gemini-1.5-flash';
+        } else if (availableModels.contains('gemini-1.5-pro')) {
+          primaryModelName = 'gemini-1.5-pro';
+        } else if (availableModels.contains('gemini-pro')) {
+          primaryModelName = 'gemini-pro';
+        } else {
+          primaryModelName = availableModels.first;
+        }
+        
+        fallbackModelName = availableModels.length > 1 ? availableModels[1] : availableModels.first;
+      }
+      
+      print('DEBUG: Using primary model: $primaryModelName');
+      print('DEBUG: Using fallback model: $fallbackModelName');
+      
+      _primaryModel = GenerativeModel(
+        model: primaryModelName,
+        apiKey: _apiKey,
+      );
+      _fallbackModel = GenerativeModel(
+        model: fallbackModelName,
+        apiKey: _apiKey,
+      );
+      _lastResortModel = GenerativeModel(
+        model: fallbackModelName,
+        apiKey: _apiKey,
+      );
+      
+      print('DEBUG: GeminiService initialized successfully');
+      _updateConnectivity();
+    } catch (e) {
+      print('DEBUG: Failed to initialize GeminiService: $e');
+      _isOnline = false;
+      
+      // Fallback to basic initialization
+      try {
+        _primaryModel = GenerativeModel(
+          model: 'gemini-pro',
+          apiKey: _apiKey,
+        );
+        _fallbackModel = GenerativeModel(
+          model: 'gemini-pro',
+          apiKey: _apiKey,
+        );
+        _lastResortModel = GenerativeModel(
+          model: 'gemini-pro',
+          apiKey: _apiKey,
+        );
+        print('DEBUG: Fallback initialization completed');
+      } catch (fallbackError) {
+        print('DEBUG: Even fallback initialization failed: $fallbackError');
+      }
+    }
+  }
+
+  void resetToWorkingModel() {
+    print('DEBUG: Resetting to Gemini 1.5 Pro (known working model)');
+    _modelIndex = 1;
+  }
+
+  Future<List<String>> listAvailableModels() async {
+    try {
+      final url = 'https://generativelanguage.googleapis.com/v1beta/models?key=$_apiKey';
+      final response = await http.get(Uri.parse(url));
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final models = <String>[];
+        
+        if (data['models'] != null) {
+          for (final model in data['models']) {
+            if (model['name'] != null && 
+                model['supportedGenerationMethods'] != null &&
+                model['supportedGenerationMethods'].contains('generateContent')) {
+              models.add(model['name'].toString().replaceFirst('models/', ''));
+            }
+          }
+        }
+        print('DEBUG: Available models: $models');
+        return models;
+      } else {
+        print('DEBUG: Failed to list models: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('DEBUG: Error listing models: $e');
+      return [];
+    }
   }
 
   Future<void> _updateConnectivity() async {
@@ -32,29 +141,50 @@ class GeminiService {
 
   Future<String> testConnection() async {
     try {
-      print('DEBUG: Testing API connection with Gemini 2.0 Flash...');
+      print('DEBUG: Testing API connection...');
+      print('DEBUG: API Key (first 10 chars): ${_apiKey.substring(0, 10)}...');
+      
+      // First, list available models
+      final availableModels = await listAvailableModels();
+      if (availableModels.isEmpty) {
+        return '❌ **No Models Available**\n\nYour API key doesn\'t have access to any Gemini models.\n\nPlease check:\n- API key validity\n- Account permissions\n- Billing status';
+      }
+      
       await _updateConnectivity();
       
       if (!_isOnline) {
-        return 'No internet connection detected';
+        print('DEBUG: No internet connection detected');
+        return '🌐 **No Internet Connection**\n\nPlease check your internet connection and try again.';
       }
       
-      final content = [Content.text('Say "Hello" in one word.')];
-      final response = await _model.generateContent(content)
-          .timeout(const Duration(seconds: 10));
+      final content = [Content.text('Hello, can you respond with a simple greeting?')];
+      print('DEBUG: Making test API call with available model...');
+      final response = await _primaryModel.generateContent(content)
+          .timeout(const Duration(seconds: 15));
       
       final result = response.text ?? 'No response received';
-      print('DEBUG: Test connection result: $result');
-      return result;
+      print('DEBUG: Test connection SUCCESS: $result');
+      return '✅ **Connection Test Successful!**\n\nAPI is working properly.\n\n**Available Models:** ${availableModels.join(', ')}\n\n**Response:** $result';
     } on TimeoutException catch (e) {
       print('DEBUG: Test timeout: $e');
-      return 'Connection timeout - API is slow to respond';
+      return '⏱️ **Connection Timeout**\n\nThe API is slow to respond. This might be due to:\n- High server load\n- Network issues\n- Model availability';
     } on SocketException catch (e) {
       print('DEBUG: Test network error: $e');
-      return 'Network error - Check internet connection';
+      return '🌐 **Network Error**\n\nCheck your internet connection.\n\nError: ${e.message}';
     } catch (e) {
       print('DEBUG: Test API error: $e');
-      return 'API Error: ${e.toString()}';
+      print('DEBUG: Error type: ${e.runtimeType}');
+      
+      final errorStr = e.toString();
+      if (errorStr.contains('404') || errorStr.contains('not found')) {
+        return '❌ **Model Not Found**\n\nGemini 1.5 Flash may not be available with your API key.\n\nTry:\n- Check if you have access to this model\n- Verify API key permissions';
+      } else if (errorStr.contains('403') || errorStr.contains('forbidden')) {
+        return '🚫 **Access Denied**\n\nYour API key may not have access to this model.\n\nError: $errorStr';
+      } else if (errorStr.contains('401') || errorStr.contains('unauthorized')) {
+        return '🔑 **Authentication Error**\n\nAPI key may be invalid or expired.\n\nError: $errorStr';
+      }
+      
+      return '⚠️ **API Error**\n\nUnexpected error occurred:\n\n$errorStr';
     }
   }
 
@@ -72,17 +202,36 @@ class GeminiService {
       }
       
       // Create a simple, direct prompt
-      final prompt = '''You are a helpful assistant specializing in Indian cattle and buffalo breeds. 
-      
-Please answer this question about livestock: $message
-      
-Keep your response helpful and informative.''';
+      final prompt = '''You are a helpful assistant specializing in Indian cattle and buffalo breeds. Answer this question: $message''';
 
       final content = [Content.text(prompt)];
       print('DEBUG: Making API call to Gemini...');
       
-      // Make API call with timeout
-      final response = await _model.generateContent(content)
+      // Make API call with timeout - select model based on index
+      GenerativeModel currentModel;
+      String modelName;
+      
+      switch (_modelIndex) {
+        case 0:
+          currentModel = _primaryModel;
+          modelName = 'Gemini Pro';
+          break;
+        case 1:
+          currentModel = _fallbackModel;
+          modelName = 'Gemini Pro (Fallback)';
+          break;
+        case 2:
+          currentModel = _lastResortModel;
+          modelName = 'Gemini Pro (Last Resort)';
+          break;
+        default:
+          currentModel = _primaryModel;
+          modelName = 'Gemini Pro';
+      }
+      
+      print('DEBUG: Using model: $modelName (index: $_modelIndex)');
+      
+      final response = await currentModel.generateContent(content)
           .timeout(const Duration(seconds: 20));
       
       print('DEBUG: API call completed');
@@ -109,15 +258,45 @@ Keep your response helpful and informative.''';
       
       // Check for specific API errors
       final errorString = e.toString().toLowerCase();
-      if (errorString.contains('api_key') || errorString.contains('invalid key')) {
+      if (errorString.contains('unhandled format for promptfeedback') || errorString.contains('generativeaisdkexception')) {
+        // Try next model if available
+        if (_modelIndex < 1) {
+          print('DEBUG: SDK compatibility issue detected, switching to Gemini 1.5 Pro');
+          _modelIndex = 1;
+          return await sendMessage(message); // Retry with next model
+        }
+        return _getFallbackResponse(message, 'sdk_compatibility');
+      } else if (errorString.contains('api_key') || errorString.contains('invalid key') || errorString.contains('authentication')) {
         return _getFallbackResponse(message, 'api_key_error');
-      } else if (errorString.contains('quota') || errorString.contains('limit')) {
+      } else if (errorString.contains('quota') || errorString.contains('limit') || errorString.contains('exceeded')) {
+        if (errorString.contains('free_tier')) {
+          return '''🚫 **Free Tier Quota Exceeded**
+
+Your Google AI API free tier quota has been exceeded.
+
+**Solutions:**
+1. **Wait**: Free tier resets daily (usually midnight UTC)
+2. **New API Key**: Create a fresh key at ai.google.dev
+3. **Upgrade**: Enable billing for higher limits
+
+**Current Status**: Please try again later or use a different API key.
+
+*Note: The app's offline breed database still works! Check the Home section for detailed breed information.*''';
+        }
         return _getFallbackResponse(message, 'quota_error');
-      } else if (errorString.contains('permission') || errorString.contains('denied')) {
+      } else if (errorString.contains('permission') || errorString.contains('denied') || errorString.contains('forbidden')) {
         return _getFallbackResponse(message, 'permission_error');
-      } else if (errorString.contains('overloaded') || errorString.contains('503')) {
+      } else if (errorString.contains('model') || errorString.contains('not found') || errorString.contains('invalid model') || errorString.contains('is not found for api version')) {
+        // Try Gemini 1.5 Pro if we haven't already
+        if (_modelIndex == 0) {
+          print('DEBUG: Model not found, switching to Gemini 1.5 Pro');
+          _modelIndex = 1;
+          return await sendMessage(message); // Retry with next model
+        }
+        return _getFallbackResponse(message, 'model_error');
+      } else if (errorString.contains('overloaded') || errorString.contains('503') || errorString.contains('service unavailable')) {
         return _getFallbackResponse(message, 'overloaded');
-      } else if (errorString.contains('unavailable') || errorString.contains('503')) {
+      } else if (errorString.contains('unavailable') || errorString.contains('502') || errorString.contains('bad gateway')) {
         return _getFallbackResponse(message, 'server_unavailable');
       }
       
@@ -242,6 +421,10 @@ Keep your response helpful and informative.''';
       statusMessage = 'temporarily overloaded. The AI service is experiencing high demand. Please try again in a few moments.';
     } else if (errorType == 'server_unavailable') {
       statusMessage = 'temporarily unavailable due to server maintenance. Please try again later.';
+    } else if (errorType == 'model_error') {
+      statusMessage = 'experiencing model compatibility issues. The AI model may not be available.';
+    } else if (errorType == 'sdk_compatibility') {
+      statusMessage = 'automatically switched to a compatible model due to SDK compatibility issues.';
     } else if (errorType == 'api_restricted') {
       statusMessage = 'currently unavailable in this region';
     } else if (errorType == 'error') {

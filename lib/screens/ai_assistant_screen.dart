@@ -49,7 +49,9 @@ I'm here to help you with questions about Indian cattle and buffalo breeds. You 
 • **Care & Feeding** - Nutrition, health, disease prevention\n
 • **Breeding Tips** - Selection, management, productivity\n
 
-What would you like to know about cattle or buffalo breeds?''',
+What would you like to know about cattle or buffalo breeds?
+
+*Type "test connection" to check AI service status*''',
         isBot: true,
         timestamp: DateTime.now(),
       ),
@@ -77,8 +79,15 @@ What would you like to know about cattle or buffalo breeds?''',
     _scrollToBottom();
 
     try {
-      // Get AI response
-      final response = await _geminiService.sendMessage(userMessage);
+      String response;
+      
+      // Check for test connection command
+      if (userMessage.toLowerCase().contains('test connection')) {
+        response = await _geminiService.testConnection();
+      } else {
+        // Get AI response
+        response = await _geminiService.sendMessage(userMessage);
+      }
       
       setState(() {
         _messages.add(
@@ -91,10 +100,12 @@ What would you like to know about cattle or buffalo breeds?''',
         _isLoading = false;
       });
     } catch (e) {
+      print('DEBUG: AI Assistant Screen Error: $e');
+      print('DEBUG: Error type: ${e.runtimeType}');
       setState(() {
         _messages.add(
           ChatMessage(
-            text: 'Sorry, I encountered an error. Please check your internet connection and try again.',
+            text: 'Sorry, I encountered an error: ${e.toString()}\n\nPlease check your internet connection and try again.',
             isBot: true,
             timestamp: DateTime.now(),
           ),
