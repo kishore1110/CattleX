@@ -609,19 +609,22 @@ Milk Yield: 3–4 kg/day; fat 4.7–5.8%.''';
       // Existing breeds (kept as originally provided)
       {
         'title': 'Gir',
-        'description': 'Indigenous breed from Gujarat known for high milk yield and disease resistance.',
+        'description':
+            'Indigenous breed from Gujarat known for high milk yield and disease resistance.',
         'image': 'assets/images/gir_cattle.jpg',
         'yield': '15-20L/day',
       },
       {
         'title': 'Red Sindhi',
-        'description': 'Hardy cattle breed known for heat tolerance and good milk production.',
+        'description':
+            'Hardy cattle breed known for heat tolerance and good milk production.',
         'image': 'assets/images/Red Sindhi.jpg',
         'yield': '10-15L/day',
       },
       {
         'title': 'Sahiwal',
-        'description': 'Heat-resistant breed with excellent milk production in tropical climates.',
+        'description':
+            'Heat-resistant breed with excellent milk production in tropical climates.',
         'image': 'assets/images/Sahiwal.jpg',
         'yield': '15-20L/day',
       },
@@ -633,272 +636,317 @@ Milk Yield: 3–4 kg/day; fat 4.7–5.8%.''';
       },
       {
         'title': 'Bachaur',
-        'description': 'Indigenous Indian breed, medium-sized, drought-resistant, primarily for milk.',
+        'description':
+            'Indigenous Indian breed, medium-sized, drought-resistant, primarily for milk.',
         'image': 'assets/images/Bachaur.jpg',
         'yield': '6-8L/day',
       },
       {
         'title': 'Badri',
-        'description': 'Indigenous Indian breed, hardy, dual-purpose, suited for hot climates.',
+        'description':
+            'Indigenous Indian breed, hardy, dual-purpose, suited for hot climates.',
         'image': 'assets/images/Badri.jpg',
         'yield': '4-6L/day',
       },
       {
         'title': 'Bargur',
-        'description': 'Strong, draught breed from Tamil Nadu, hardy, disease-resistant.',
+        'description':
+            'Strong, draught breed from Tamil Nadu, hardy, disease-resistant.',
         'image': 'assets/images/Bargur.jpg',
         'yield': '2-3L/day',
       },
       {
         'title': 'Belahi',
-        'description': 'Indigenous breed, hardy, adaptable, primarily used for draft purposes.',
+        'description':
+            'Indigenous breed, hardy, adaptable, primarily used for draft purposes.',
         'image': 'assets/images/Belahi.jpg',
         'yield': '2-4L/day',
       },
       {
         'title': 'Binjharpuri',
-        'description': 'Indigenous dairy breed from Odisha, sturdy, medium-sized, well-built.',
+        'description':
+            'Indigenous dairy breed from Odisha, sturdy, medium-sized, well-built.',
         'image': 'assets/images/Binjharpuri.jpg',
         'yield': '8-10L/day',
       },
       {
         'title': 'Dagri',
-        'description': 'Indigenous draught breed from Himachal Pradesh, small, hardy, sure-footed.',
+        'description':
+            'Indigenous draught breed from Himachal Pradesh, small, hardy, sure-footed.',
         'image': 'assets/images/Dagri.jpg',
         'yield': '2-3L/day',
       },
       {
         'title': 'Dangi',
-        'description': 'Indigenous draught breed from Maharashtra, sturdy, disease-resistant, rain-tolerant.',
+        'description':
+            'Indigenous draught breed from Maharashtra, sturdy, disease-resistant, rain-tolerant.',
         'image': 'assets/images/Dangi.jpg',
         'yield': '4-6L/day',
       },
       {
         'title': 'Deoni',
-        'description': 'Dual-purpose breed from Maharashtra, hardy, good for milk and draught.',
+        'description':
+            'Dual-purpose breed from Maharashtra, hardy, good for milk and draught.',
         'image': 'assets/images/Deoni.jpg',
         'yield': '8-10L/day',
       },
 
       {
         'title': 'Gangatiri',
-        'description': 'Medium-frame dual-purpose breed from Ganga belt, white-grey coat',
+        'description':
+            'Medium-frame dual-purpose breed from Ganga belt, white-grey coat',
         'image': 'assets/images/Gangatiri.jpg',
         'yield': '≈4L/day',
       },
       {
         'title': 'Gaolao',
-        'description': 'Lighter Ongole-type, agile draft-milk cattle, white/grey coat traits.',
+        'description':
+            'Lighter Ongole-type, agile draft-milk cattle, white/grey coat traits.',
         'image': 'assets/images/Gaolao.jpg',
         'yield': '≈2.4-3.0L/day',
       },
       {
         'title': 'Ghumusari',
-        'description': 'Small, sturdy draft cattle; white-grey coat; heat tolerant, low feed.',
+        'description':
+            'Small, sturdy draft cattle; white-grey coat; heat tolerant, low feed.',
         'image': 'assets/images/Ghumusari.jpg',
         'yield': '≈1.7-2.4L/day',
       },
       {
         'title': 'Hallikar',
-        'description': 'Southern India draught breed; grey coat; strong, compact oxen, modest milk.',
+        'description':
+            'Southern India draught breed; grey coat; strong, compact oxen, modest milk.',
         'image': 'assets/images/Hallikar.jpg',
         'yield': '≈1.9-3.9L/day',
       },
       {
         'title': 'Hariana',
-        'description': 'Dual-purpose northern Indian breed; strong draft; hardy; light grey coat.',
+        'description':
+            'Dual-purpose northern Indian breed; strong draft; hardy; light grey coat.',
         'image': 'assets/images/Hariana.jpg',
         'yield': '≈997 kg/lactation',
       },
       {
         'title': 'Himachali Pahari',
-        'description': 'Small, hardy draught breed; black coat; adapted to hilly terrain.',
+        'description':
+            'Small, hardy draught breed; black coat; adapted to hilly terrain.',
         'image': 'assets/images/Himachali Pahari.jpg',
         'yield': '≈1-3L/day',
       },
       {
         'title': 'Kangayam',
-        'description': 'Hardy draught breed from Tamil Nadu; grey coat; compact build.',
+        'description':
+            'Hardy draught breed from Tamil Nadu; grey coat; compact build.',
         'image': 'assets/images/Kangayam.jpg',
         'yield': '≈1.5-3.0L/day',
       },
       {
         'title': 'Kankrej',
-        'description': 'Dual-purpose breed from Gujarat and Rajasthan; lyre-shaped horns; drought-resistant.',
+        'description':
+            'Dual-purpose breed from Gujarat and Rajasthan; lyre-shaped horns; drought-resistant.',
         'image': 'assets/images/Kankrej.jpg',
         'yield': '≈4.8% fat, ~1746 kg/lactation',
       },
       {
         'title': 'Kenkatha',
-        'description': 'Small, sturdy draught breed; grey to dark grey coat; hardy.',
+        'description':
+            'Small, sturdy draught breed; grey to dark grey coat; hardy.',
         'image': 'assets/images/Kenkatha.jpg',
         'yield': '≈500-600 kg/lactation',
       },
       {
         'title': 'Khariar',
-        'description': 'Small, hardy draught breed from Odisha; brown-grey coat; straight horns.',
+        'description':
+            'Small, hardy draught breed from Odisha; brown-grey coat; straight horns.',
         'image': 'assets/images/Khariar.jpg',
         'yield': '≈300-450 kg/lactation',
       },
       {
         'title': 'Kherigarh',
-        'description': 'Small, active draught breed from Uttar Pradesh; white-grey coat.',
+        'description':
+            'Small, active draught breed from Uttar Pradesh; white-grey coat.',
         'image': 'assets/images/Kherigarh.jpg',
         'yield': '≈300-500 kg/lactation',
       },
       {
         'title': 'Khillar',
-        'description': 'Compact, draught adapted breed from Maharashtra; grey white coat; sturdy build.',
+        'description':
+            'Compact, draught adapted breed from Maharashtra; grey white coat; sturdy build.',
         'image': 'assets/images/Khillar.jpg',
         'yield': '≈2.4L/day',
       },
       {
         'title': 'Konkan Kapila',
-        'description': 'Small, hardy draught breed from Maharashtra; reddish-brown coat; heat-tolerant.',
+        'description':
+            'Small, hardy draught breed from Maharashtra; reddish-brown coat; heat-tolerant.',
         'image': 'assets/images/Konkan Kapila.jpg',
         'yield': '≈450 kg/lactation',
       },
       {
         'title': 'Kosali',
-        'description': 'Small, hardy draught breed from Chhattisgarh; red or grey coat.',
+        'description':
+            'Small, hardy draught breed from Chhattisgarh; red or grey coat.',
         'image': 'assets/images/Kosali.jpg',
         'yield': '≈210 kg/lactation',
       },
       {
         'title': 'Krishna Valley',
-        'description': 'Massive draught breed from northern Karnataka; grayish-white coat; hardy.',
+        'description':
+            'Massive draught breed from northern Karnataka; grayish-white coat; hardy.',
         'image': 'assets/images/Krishna Valley.jpg',
         'yield': '≈900-1,200 kg/lactation',
       },
       {
         'title': 'Ladakhi',
-        'description': 'Compact, hardy draught breed from Ladakh; black coat; high-fat milk.',
+        'description':
+            'Compact, hardy draught breed from Ladakh; black coat; high-fat milk.',
         'image': 'assets/images/Ladakhi.jpg',
         'yield': '≈2-5 kg/day',
       },
       {
         'title': 'Lakhimi',
-        'description': 'Compact, hardy draught breed from Ladakh; black coat; high-fat milk.',
+        'description':
+            'Compact, hardy draught breed from Ladakh; black coat; high-fat milk.',
         'image': 'assets/images/Lakhimi.jpg',
         'yield': '≈2-5 kg/day',
       },
       {
         'title': 'Malnad',
-        'description': 'Small, hardy draught breed from Karnataka; black coat; disease-resistant.',
+        'description':
+            'Small, hardy draught breed from Karnataka; black coat; disease-resistant.',
         'image': 'assets/images/Malnad.jpg',
         'yield': '≈1.6L/day',
       },
       {
         'title': 'Malvi',
-        'description': 'Hardy draught breed from Madhya Pradesh; white-grey coat; strong.',
+        'description':
+            'Hardy draught breed from Madhya Pradesh; white-grey coat; strong.',
         'image': 'assets/images/Malvi.jpg',
         'yield': '≈916 kg/lactation',
       },
       {
         'title': 'Mewati',
-        'description': 'Hardy dual-purpose breed from Haryana, Rajasthan, and Uttar Pradesh.',
+        'description':
+            'Hardy dual-purpose breed from Haryana, Rajasthan, and Uttar Pradesh.',
         'image': 'assets/images/Mewati.jpg',
         'yield': '≈958 kg/lactation',
       },
       {
         'title': 'Motu',
-        'description': 'Small, hardy draught breed from Odisha; reddish-brown coat; polled.',
+        'description':
+            'Small, hardy draught breed from Odisha; reddish-brown coat; polled.',
         'image': 'assets/images/Motu.jpg',
         'yield': '≈100-140 kg/lactation',
       },
       {
         'title': 'Nagori',
-        'description': 'Hardy Rajasthan cattle for milk production and agricultural work.',
+        'description':
+            'Hardy Rajasthan cattle for milk production and agricultural work.',
         'image': 'assets/images/Nagori.jpg',
         'yield': '8-12L/day',
       },
       {
         'title': 'Nari',
-        'description': 'Small draught breed from Madhya Pradesh; hardy; light brown coat.',
+        'description':
+            'Small draught breed from Madhya Pradesh; hardy; light brown coat.',
         'image': 'assets/images/Nari.jpg',
         'yield': '≈250-400 kg/lactation',
       },
       {
         'title': 'Nimari',
-        'description': 'Adaptable draught and milch cattle from Nimar, Madhya Pradesh.',
+        'description':
+            'Adaptable draught and milch cattle from Nimar, Madhya Pradesh.',
         'image': 'assets/images/Nimari.jpg',
         'yield': '6-9L/day',
       },
       {
         'title': 'Ongole',
-        'description': 'Large, muscular breed from Andhra Pradesh; heat-resistant; prized globally.',
+        'description':
+            'Large, muscular breed from Andhra Pradesh; heat-resistant; prized globally.',
         'image': 'assets/images/Ongole.jpg',
         'yield': '≈850-2,518 kg/lactation',
       },
       {
         'title': 'Poda Thurpu',
-        'description': 'Hardy draught breed from Telangana; spotted coat; drought-tolerant.',
+        'description':
+            'Hardy draught breed from Telangana; spotted coat; drought-tolerant.',
         'image': 'assets/images/Poda Thurpu.jpg',
         'yield': '≈494-646 kg/lactation',
       },
       {
         'title': 'Ponwar',
-        'description': 'Hardy draught breed from Uttar Pradesh; black-and-white coat; active.',
+        'description':
+            'Hardy draught breed from Uttar Pradesh; black-and-white coat; active.',
         'image': 'assets/images/Ponwar.jpg',
         'yield': '≈460 kg/lactation',
       },
       {
         'title': 'Pulikulam',
-        'description': 'Hardy draught and game breed from Tamil Nadu; grey/white coat.',
+        'description':
+            'Hardy draught and game breed from Tamil Nadu; grey/white coat.',
         'image': 'assets/images/Pulikulam.jpg',
         'yield': '≈1.25 kg/day average',
       },
       {
         'title': 'Punganur',
-        'description': 'Compact, drought-resistant breed from Andhra Pradesh; prized for ghee.',
+        'description':
+            'Compact, drought-resistant breed from Andhra Pradesh; prized for ghee.',
         'image': 'assets/images/Punganur.jpg',
         'yield': '≈467 kg/lactation (~2.7 kg peak/day)',
       },
       {
         'title': 'Purnea',
-        'description': 'Small-sized cattle from Bihar; hardy; utilized for milk and draught.',
+        'description':
+            'Small-sized cattle from Bihar; hardy; utilized for milk and draught.',
         'image': 'assets/images/Purnea.jpg',
         'yield': '≈452-785 kg/lactation',
       },
       {
         'title': 'Rathi',
-        'description': 'Medium-sized dual-purpose breed from Rajasthan; good milk and draught.',
+        'description':
+            'Medium-sized dual-purpose breed from Rajasthan; good milk and draught.',
         'image': 'assets/images/Rathi.jpg',
         'yield': '≈1,500-1,800 kg/lactation',
       },
       {
         'title': 'Red Kandhari',
-        'description': 'Native Maharashtra breed; hardy, drought-resistant, suitable for milk and draught.',
+        'description':
+            'Native Maharashtra breed; hardy, drought-resistant, suitable for milk and draught.',
         'image': 'assets/images/Red Kandhari.jpg',
         'yield': '≈1,800-2,000 kg/lactation',
       },
       {
         'title': 'Shweta Kapila',
-        'description': 'White-colored dual-purpose breed; good milk and draft capabilities.',
+        'description':
+            'White-colored dual-purpose breed; good milk and draft capabilities.',
         'image': 'assets/images/Shweta Kapila.jpg',
         'yield': '≈1,800-2,200 kg/lactation',
       },
       {
         'title': 'Siri',
-        'description': 'Indigenous hill cattle of India, hardy, disease-resistant, low-maintenance.',
+        'description':
+            'Indigenous hill cattle of India, hardy, disease-resistant, low-maintenance.',
         'image': 'assets/images/Siri.jpg',
         'yield': '≈2-6 kg/day',
       },
       {
         'title': 'Tharparkar',
-        'description': 'Dual-purpose breed from Rajasthan; hardy, heat-tolerant, good draught ability.',
+        'description':
+            'Dual-purpose breed from Rajasthan; hardy, heat-tolerant, good draught ability.',
         'image': 'assets/images/Tharparkar.jpg',
         'yield': '≈8-10L/day',
       },
       {
         'title': 'Thutho',
-        'description': 'Indigenous small cattle, hardy, used for draught and milk.',
+        'description':
+            'Indigenous small cattle, hardy, used for draught and milk.',
         'image': 'assets/images/Thutho.jpg',
         'yield': '≈1-3 kg/day',
       },
       {
         'title': 'Umblachery',
-        'description': 'Hardy Tamil Nadu breed, suitable for drought-prone areas; grey with white marks.',
+        'description':
+            'Hardy Tamil Nadu breed, suitable for drought-prone areas; grey with white marks.',
         'image': 'assets/images/Umblachery.jpg',
         'yield': '≈2 kg/day',
       },

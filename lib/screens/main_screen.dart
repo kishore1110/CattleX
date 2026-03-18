@@ -14,7 +14,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  
+
   final List<Widget> _screens = [
     const HomeScreen(),
     const ScannerScreen(),
@@ -65,9 +65,9 @@ class _MainScreenState extends State<MainScreen> {
                   icon: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _currentIndex == 0 
-                        ? AppColors.primaryGreen.withValues(alpha: 0.1)
-                        : Colors.transparent,
+                      color: _currentIndex == 0
+                          ? AppColors.primaryGreen.withValues(alpha: 0.1)
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -81,13 +81,15 @@ class _MainScreenState extends State<MainScreen> {
                   icon: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _currentIndex == 1 
-                        ? AppColors.primaryGreen.withValues(alpha: 0.1)
-                        : Colors.transparent,
+                      color: _currentIndex == 1
+                          ? AppColors.primaryGreen.withValues(alpha: 0.1)
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      _currentIndex == 1 ? Icons.camera_alt : Icons.camera_alt_outlined,
+                      _currentIndex == 1
+                          ? Icons.camera_alt
+                          : Icons.camera_alt_outlined,
                       size: 24,
                     ),
                   ),
@@ -97,9 +99,9 @@ class _MainScreenState extends State<MainScreen> {
                   icon: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _currentIndex == 2 
-                        ? AppColors.primaryGreen.withValues(alpha: 0.1)
-                        : Colors.transparent,
+                      color: _currentIndex == 2
+                          ? AppColors.primaryGreen.withValues(alpha: 0.1)
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -113,13 +115,15 @@ class _MainScreenState extends State<MainScreen> {
                   icon: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _currentIndex == 3 
-                        ? AppColors.primaryGreen.withValues(alpha: 0.1)
-                        : Colors.transparent,
+                      color: _currentIndex == 3
+                          ? AppColors.primaryGreen.withValues(alpha: 0.1)
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      _currentIndex == 3 ? Icons.smart_toy : Icons.smart_toy_outlined,
+                      _currentIndex == 3
+                          ? Icons.smart_toy
+                          : Icons.smart_toy_outlined,
                       size: 24,
                     ),
                   ),

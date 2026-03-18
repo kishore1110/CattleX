@@ -1,57 +1,67 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CattleDetector {
-  bool _isModelLoaded = false;
-  
-  /// Initialize the cattle detector (placeholder for future model integration)
-  Future<bool> loadModel() async {
+  /// Detect cattle breed using the hosted FastAPI backend
+  Future<DetectionResult> detectCattle(XFile imageFile) async {
     try {
-      print('🔄 Initializing cattle detector...');
-      
-      // Placeholder for future model loading
-      await Future.delayed(Duration(milliseconds: 500)); // Simulate loading time
-      
-      _isModelLoaded = true;
-      print('✅ Cattle detector initialized (ready for model integration)');
-      
-      return true;
-    } catch (e) {
-      print('❌ Failed to initialize cattle detector: $e');
-      _isModelLoaded = false;
-      return false;
-    }
-  }
+      final apiUrl = dotenv.env['CATTLE_API_URL'] ?? '';
+      var uri = Uri.parse(apiUrl);
+      var request = http.MultipartRequest('POST', uri);
 
-  /// Check if detector is initialized
-  bool get isModelLoaded => _isModelLoaded;
+      if (kIsWeb) {
+        final bytes = await imageFile.readAsBytes();
+        request.files.add(
+          http.MultipartFile.fromBytes('file', bytes, filename: imageFile.name),
+        );
+      } else {
+        request.files.add(
+          await http.MultipartFile.fromPath('file', imageFile.path),
+        );
+      }
 
-  /// Placeholder detection method - replace with your actual model integration
-  Future<DetectionResult> detectCattle(File imageFile) async {
-    if (!_isModelLoaded) {
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        var responseData = json.decode(response.body);
+
+        if (responseData['success'] == true) {
+          return DetectionResult(
+            isAnimal: true,
+            animalType: AnimalType.cattle,
+            confidence: responseData['confidence']?.toDouble() ?? 0.0,
+            message: responseData['breed'] ?? 'Unknown Breed',
+          );
+        } else {
+          return DetectionResult(
+            isAnimal: false,
+            animalType: AnimalType.none,
+            confidence: 0.0,
+            message: responseData['message'] ?? 'Failed to detect cattle',
+          );
+        }
+      } else {
+        return DetectionResult(
+          isAnimal: false,
+          animalType: AnimalType.none,
+          confidence: 0.0,
+          message: 'Server error: ${response.statusCode}',
+        );
+      }
+    } on SocketException catch (_) {
       return DetectionResult(
         isAnimal: false,
         animalType: AnimalType.none,
         confidence: 0.0,
-        message: 'Cattle detector not initialized. Please try again.',
+        message:
+            'No internet connection. Please connect to the internet or refer to locally stored breed information on the Home screen.',
       );
-    }
-
-    try {
-      print('🔍 Placeholder detection - replace with your model integration');
-      print('📷 Input image: ${imageFile.path}');
-      
-      // Placeholder response - replace this with your actual model inference
-      await Future.delayed(Duration(seconds: 2)); // Simulate processing time
-      
-      return DetectionResult(
-        isAnimal: false,
-        animalType: AnimalType.none,
-        confidence: 0.0,
-        message: 'Model integration pending. Please add your trained model here.',
-      );
-      
     } catch (e) {
-      print('❌ Error during detection: $e');
       return DetectionResult(
         isAnimal: false,
         animalType: AnimalType.none,
@@ -60,21 +70,10 @@ class CattleDetector {
       );
     }
   }
-
-  /// Dispose resources
-  void dispose() {
-    _isModelLoaded = false;
-    print('🗑️ Cattle detector disposed');
-  }
 }
-
 
 /// Animal types that can be detected
-enum AnimalType {
-  none,
-  cattle,
-  buffalo,
-}
+enum AnimalType { none, cattle, buffalo }
 
 /// Detection result class
 class DetectionResult {

@@ -66,11 +66,7 @@ What would you like to know about cattle or buffalo breeds?
     // Add user message
     setState(() {
       _messages.add(
-        ChatMessage(
-          text: userMessage,
-          isBot: false,
-          timestamp: DateTime.now(),
-        ),
+        ChatMessage(text: userMessage, isBot: false, timestamp: DateTime.now()),
       );
       _isLoading = true;
     });
@@ -80,14 +76,10 @@ What would you like to know about cattle or buffalo breeds?
     try {
       // Get AI response
       final String response = await _geminiService.sendMessage(userMessage);
-      
+
       setState(() {
         _messages.add(
-          ChatMessage(
-            text: response,
-            isBot: true,
-            timestamp: DateTime.now(),
-          ),
+          ChatMessage(text: response, isBot: true, timestamp: DateTime.now()),
         );
         _isLoading = false;
       });
@@ -97,7 +89,8 @@ What would you like to know about cattle or buffalo breeds?
       setState(() {
         _messages.add(
           ChatMessage(
-            text: 'Sorry, I encountered an error: ${e.toString()}\n\nPlease check your internet connection and try again.',
+            text:
+                'Sorry, I encountered an error: ${e.toString()}\n\nPlease check your internet connection and try again.',
             isBot: true,
             timestamp: DateTime.now(),
           ),
@@ -120,7 +113,6 @@ What would you like to know about cattle or buffalo breeds?
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +152,7 @@ What would you like to know about cattle or buffalo breeds?
               },
             ),
           ),
-          
+
           // Input
           Container(
             padding: const EdgeInsets.all(16),
@@ -187,7 +179,9 @@ What would you like to know about cattle or buffalo breeds?
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
-                        borderSide: const BorderSide(color: AppColors.primaryGreen),
+                        borderSide: const BorderSide(
+                          color: AppColors.primaryGreen,
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -205,16 +199,16 @@ What would you like to know about cattle or buffalo breeds?
                   backgroundColor: AppColors.primaryGreen,
                   foregroundColor: Colors.white,
                   mini: true,
-                  child: _isLoading 
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : const Icon(Icons.send),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Icon(Icons.send),
                 ),
               ],
             ),
@@ -237,11 +231,7 @@ What would you like to know about cattle or buffalo breeds?
             CircleAvatar(
               radius: 16,
               backgroundColor: AppColors.primaryGreen,
-              child: const Icon(
-                Icons.smart_toy,
-                color: Colors.white,
-                size: 16,
-              ),
+              child: const Icon(Icons.smart_toy, color: Colors.white, size: 16),
             ),
             const SizedBox(width: 8),
           ],
@@ -296,11 +286,7 @@ What would you like to know about cattle or buffalo breeds?
             CircleAvatar(
               radius: 16,
               backgroundColor: AppColors.textSecondary,
-              child: const Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 16,
-              ),
+              child: const Icon(Icons.person, color: Colors.white, size: 16),
             ),
           ],
         ],
@@ -316,11 +302,7 @@ What would you like to know about cattle or buffalo breeds?
           CircleAvatar(
             radius: 16,
             backgroundColor: AppColors.primaryGreen,
-            child: const Icon(
-              Icons.smart_toy,
-              color: Colors.white,
-              size: 16,
-            ),
+            child: const Icon(Icons.smart_toy, color: Colors.white, size: 16),
           ),
           const SizedBox(width: 8),
           Container(

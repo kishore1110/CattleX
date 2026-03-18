@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import '../main.dart';
-import 'registration_form_screen.dart';
+import '../services/cattle_detector.dart';
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
@@ -12,15 +13,14 @@ class ScannerScreen extends StatefulWidget {
 }
 
 class _ScannerScreenState extends State<ScannerScreen> {
-  File? _selectedImage;
+  XFile? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool _isAnalyzing = false;
   String? _breedResult;
-  bool _isRegistered = false; // Track if current image has been registered
+  double? _confidence;
   final ScrollController _scrollController = ScrollController();
-  
 
-  // No model initialization required for static result
+  final CattleDetector _detector = CattleDetector();
 
   @override
   void dispose() {
@@ -33,47 +33,61 @@ class _ScannerScreenState extends State<ScannerScreen> {
       final XFile? image = await _picker.pickImage(source: source);
       if (image != null) {
         setState(() {
-          _selectedImage = File(image.path);
+          _selectedImage = image;
           _breedResult = null;
-          _isRegistered = false; // Reset registration status for new image
+          _confidence = null;
         });
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error picking image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
       }
     }
   }
 
   Future<void> _analyzeBreed() async {
     if (_selectedImage == null) return;
-    
+
     setState(() {
       _isAnalyzing = true;
       _breedResult = null;
+      _confidence = null;
     });
-    
+
     try {
-      // Show loading for 5 seconds then return static Gir result
-      await Future.delayed(const Duration(seconds: 5));
-      setState(() {
-        _breedResult = 'Gir';
-      });
-      
-      // Auto-scroll to show the result after a brief delay
+      final result = await _detector.detectCattle(_selectedImage!);
+
       if (mounted) {
-        await Future.delayed(const Duration(milliseconds: 300));
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
+        if (result.isAnimal) {
+          setState(() {
+            _breedResult = result
+                .message; // The service stores the breed name in the 'message' field
+            _confidence = result.confidence;
+          });
+
+          // Auto-scroll to show the result after a brief delay
+          await Future.delayed(const Duration(milliseconds: 300));
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        } else {
+          // Display error string (like Offline, Server Error, No Objects detected) from the service
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result.message),
+              backgroundColor: result.message.contains('No internet connection')
+                  ? Colors.orange.shade800
+                  : Colors.red,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
       }
-      
     } catch (e) {
-      // Error during analysis: $e
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -83,9 +97,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
         );
       }
     } finally {
-      setState(() {
-        _isAnalyzing = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isAnalyzing = false;
+        });
+      }
     }
   }
 
@@ -190,19 +206,16 @@ class _ScannerScreenState extends State<ScannerScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Professional Image Display Area
             Container(
               height: 320,
               decoration: BoxDecoration(
                 color: AppColors.backgroundWhite,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.border,
-                  width: 2,
-                ),
+                border: Border.all(color: AppColors.border, width: 2),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.shadow,
@@ -214,11 +227,17 @@ class _ScannerScreenState extends State<ScannerScreen> {
               child: _selectedImage != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.file(
-                        _selectedImage!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
+                      child: kIsWeb
+                          ? Image.network(
+                              _selectedImage!.path,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            )
+                          : Image.file(
+                              File(_selectedImage!.path),
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                     )
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -231,24 +250,22 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         const SizedBox(height: 16),
                         Text(
                           'No image selected',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Tap the camera button to capture or select an image',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textLight,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.textLight),
                           textAlign: TextAlign.center,
                         ),
                       ],
                     ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Professional Action Buttons
             Row(
               children: [
@@ -277,11 +294,15 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           )
                         : const Icon(Icons.analytics),
-                    label: Text(_isAnalyzing ? 'Analyzing...' : 'Analyze Breed'),
+                    label: Text(
+                      _isAnalyzing ? 'Analyzing...' : 'Analyze Breed',
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.warning,
                       foregroundColor: Colors.white,
@@ -292,9 +313,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Professional Results Section
             if (_breedResult != null)
               Container(
@@ -302,7 +323,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppColors.success.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,17 +347,21 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         const SizedBox(width: 12),
                         Text(
                           'Analysis Complete',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: AppColors.success,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: AppColors.success,
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
@@ -345,84 +372,52 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         children: [
                           Text(
                             'Identified Breed',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: AppColors.textSecondary),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             _breedResult!,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Cattle',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: AppColors.textSecondary,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                           const SizedBox(height: 12),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.success.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+                              border: Border.all(
+                                color: AppColors.success.withValues(alpha: 0.3),
+                              ),
                             ),
                             child: Text(
-                              'Confidence: 92.7%',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.success,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              _confidence != null
+                                  ? 'Confidence: ${(_confidence! * 100).toStringAsFixed(1)}%'
+                                  : 'Confidence: --%',
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: AppColors.success,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton.icon(
-                        onPressed: _isRegistered ? null : () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegistrationFormScreen(
-                                breedName: _breedResult ?? 'Unknown',
-                                confidence: 0.85, // Static confidence for now
-                              ),
-                            ),
-                          );
-                          
-                          // If registration was successful, update the status
-                          if (result == true) {
-                            setState(() {
-                              _isRegistered = true;
-                            });
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _isRegistered ? Colors.grey : AppColors.primaryGreen,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 2,
-                        ),
-                        icon: Icon(_isRegistered ? Icons.check_circle : Icons.app_registration),
-                        label: Text(
-                          _isRegistered ? 'Registered' : 'Register Animal',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                       ),
                     ),
                   ],
@@ -439,19 +434,12 @@ class _ScannerScreenState extends State<ScannerScreen> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          const Icon(
-            Icons.check_circle_outline,
-            color: Colors.white,
-            size: 16,
-          ),
+          const Icon(Icons.check_circle_outline, color: Colors.white, size: 16),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
         ],
